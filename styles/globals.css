@@ -23,3 +23,11 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+.ant-carousel .slick-prev::before {
+  content: "" !important;
+}
+
+.ant-carousel .slick-next::before {
+  content: "" !important;
+}
