@@ -9,6 +9,8 @@ import {
   PaperAirplaneIcon,
 } from "@heroicons/react/outline";
 import { HeartIcon as HeartIconFilled } from "@heroicons/react/solid";
+import { Button, Form, Input, Row, Col } from "antd";
+import { useMediaQuery } from "react-responsive";
 
 interface IPostProps {
   id: string;
@@ -19,6 +21,8 @@ interface IPostProps {
 }
 
 export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption }) => {
+  const isMobile500 = useMediaQuery({ query: "(max-width: 500px)" });
+
   return (
     <div className="my-7 rounded-lg border border-gray-200 bg-white">
       <div className="flex items-center p-5">
@@ -52,17 +56,38 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
         {caption}
       </div>
 
-      <form className="flex items-center p-4">
+      <Form name="basic" initialValues={{ remember: true }} autoComplete="off">
+        <Row>
+          <Col span={isMobile500 ? 18 : 20}>
+            <Form.Item name="comment">
+              <Input
+                placeholder="Add a comment..."
+                bordered={false}
+                prefix={<EmojiHappyIcon className="h-7" />}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={isMobile500 ? 2 : 4}>
+            <Form.Item>
+              <Button type="text" htmlType="submit" className="font-semibold text-blue-400">
+                Post
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+
+      {/* <form className="flex items-center p-4">
         <EmojiHappyIcon className="h-7" />
         <input
           type="text"
-          placeholder="Add a comment..."
+          placeholder=" Add a comment..."
           className="flex-1 border-none outline-none focus:ring-0"
         />
         <button type="submit" className="font-semibold text-blue-400">
           Post
         </button>
-      </form>
+      </form> */}
     </div>
   );
 };
