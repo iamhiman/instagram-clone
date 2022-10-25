@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { Carousel } from "antd";
 import { useMediaQuery } from "react-responsive";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/outline";
+import { Story } from "./Story";
 
 interface IUsers {
   id: string;
@@ -55,15 +56,7 @@ export const Stories: NextPage<IStoriesProps> = ({ users }) => {
       prevArrow={<ArrowClick arrowType={<ChevronLeftIcon />} />}
     >
       {users?.map(user => (
-        <div key={user?.id} className="pt-4 pl-2">
-          <img
-            src={user?.avatar!}
-            referrerPolicy="no-referrer"
-            alt=""
-            className="h-14 w-14 transform cursor-pointer rounded-full border-2 border-solid border-red-500 object-contain p-[1.5px] transition duration-200 ease-out hover:scale-110"
-          />
-          <p className="w-14 truncate text-center text-xs">{user?.username}</p>
-        </div>
+        <Story key={user?.id} img={user?.avatar} username={user?.username} />
       ))}
     </Carousel>
   );
