@@ -7,7 +7,7 @@ import {
   signIn as SignIntoProvider,
 } from "next-auth/react";
 import { Header } from "../../components/Header";
-import Instagram from "../assets/instagram.webp";
+import Instagram from "../../assets/instagram.webp";
 
 interface IProviderProps {
   providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>;
