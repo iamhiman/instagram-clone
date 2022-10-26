@@ -16,7 +16,7 @@ interface IProviderProps {
 const signIn: NextPage<IProviderProps> = ({ providers }) => {
   return (
     <>
-      <Header />
+      <Header setOpen={() => {}} />
       <div className="flex min-h-screen flex-col items-center justify-center py-2 px-14 text-center">
         <img className="w-80" src={Instagram?.src} alt="" referrerPolicy="no-referrer" />
         <p className="font-xs italic">
