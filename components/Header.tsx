@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   SearchIcon,
   PlusCircleIcon,
@@ -14,7 +14,11 @@ import { useRouter } from "next/router";
 import Instagram from "../assets/instagram.webp";
 import InstaIcon from "../assets/instaicon.webp";
 
-export const Header: NextPage = () => {
+interface IHeaderProps {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export const Header: NextPage<IHeaderProps> = ({ setOpen }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -55,7 +59,7 @@ export const Header: NextPage = () => {
                 3
               </div>
             </div>
-            <PlusCircleIcon className="navBtn" />
+            <PlusCircleIcon className="navBtn" onClick={() => setOpen(true)} />
             <UserGroupIcon className="navBtn" />
             <HeartIcon className="navBtn" />
             <img

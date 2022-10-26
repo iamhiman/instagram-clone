@@ -1,9 +1,13 @@
 import type { NextPage } from "next";
+import { useState } from "react";
 import Head from "next/head";
 import { Header } from "../components/Header";
 import Feed from "../components/Feed";
+import { UploadPost } from "../components/UploadPost";
 
 const Home: NextPage = () => {
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
     <div className="h-screen overflow-y-scroll bg-gray-50">
       <Head>
@@ -12,8 +16,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
+      <Header setOpen={setOpen} />
       <Feed />
+      <UploadPost open={open} setOpen={setOpen} />
     </div>
   );
 };

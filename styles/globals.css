@@ -31,3 +31,7 @@ body {
 .ant-carousel .slick-next::before {
   content: "" !important;
 }
+
+.ant-modal-content {
+  border-radius: 0.5rem !important;
+}
