@@ -1,5 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+  QueryDocumentSnapshot,
+  DocumentData,
+} from "firebase/firestore";
 import {
   BookmarkIcon,
   ChatIcon,
@@ -11,6 +21,7 @@ import {
 import { HeartIcon as HeartIconFilled } from "@heroicons/react/solid";
 import { Button, Form, Input, Row, Col } from "antd";
 import { useMediaQuery } from "react-responsive";
+import { db } from "../firebase";
 
 interface IPostProps {
   id: string;
@@ -21,7 +32,32 @@ interface IPostProps {
 }
 
 export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption }) => {
+  const { data: session } = useSession();
+  const [likes, setLikes] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
+  const [hasLiked, setHasLiked] = useState<any>(false);
   const isMobile500 = useMediaQuery({ query: "(max-width: 500px)" });
+
+  useEffect(
+    () => onSnapshot(collection(db, "posts", id, "likes"), snapshot => setLikes(snapshot.docs)),
+    [id]
+  );
+
+  useEffect(
+    () => setHasLiked(likes.findIndex(like => like.id === session?.user?.uid) !== -1),
+    [likes, session?.user?.uid]
+  );
+
+  const likePost = async () => {
+    if (hasLiked) {
+      await deleteDoc(doc(db, "posts", id, "likes", session?.user?.uid!));
+    } else {
+      await setDoc(doc(db, "posts", id, "likes", session?.user?.uid!), {
+        username: session?.user?.username,
+        userImg: userImg,
+        name: session?.user?.name,
+      });
+    }
+  };
 
   return (
     <div className="my-7 rounded-lg border border-gray-200 bg-white">
@@ -38,19 +74,25 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
 
       <img src={img} referrerPolicy="no-referrer" className="w-screen object-contain" alt="" />
 
-      <div className="flex justify-between px-4 pt-4">
-        <div className="flex space-x-4">
-          <HeartIcon className="btn" />
+      {session && (
+        <div className="flex justify-between px-4 pt-4">
+          <div className="flex space-x-4">
+            {hasLiked ? (
+              <HeartIconFilled className="btn text-red-500" onClick={likePost} />
+            ) : (
+              <HeartIcon className="btn" onClick={likePost} />
+            )}
 
-          <ChatIcon className="btn" />
-          <PaperAirplaneIcon className="btn" />
+            <ChatIcon className="btn" />
+            <PaperAirplaneIcon className="btn" />
+          </div>
+
+          <BookmarkIcon className="btn" />
         </div>
-
-        <BookmarkIcon className="btn" />
-      </div>
+      )}
 
       <div className="truncate p-5">
-        <p className="mb-1 font-bold">5 likes</p>
+        {likes.length > 0 && <p className="mb-1 font-bold">{likes.length} likes</p>}
 
         <span className="mr-1 font-bold">{username}</span>
         {caption}
@@ -76,18 +118,6 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
           </Col>
         </Row>
       </Form>
-
-      {/* <form className="flex items-center p-4">
-        <EmojiHappyIcon className="h-7" />
-        <input
-          type="text"
-          placeholder=" Add a comment..."
-          className="flex-1 border-none outline-none focus:ring-0"
-        />
-        <button type="submit" className="font-semibold text-blue-400">
-          Post
-        </button>
-      </form> */}
     </div>
   );
 };

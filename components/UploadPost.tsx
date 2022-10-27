@@ -30,9 +30,6 @@ export const UploadPost: NextPage<IUploadPostProps> = ({ open, setOpen }) => {
       profileImg: session?.user?.image,
       timestamp: serverTimestamp(),
     });
-    console.log("docref", docRef);
-
-    console.log("New doc added with ID", docRef.id);
 
     const imageRef = ref(storage, `posts/${docRef.id}/image`);
 
@@ -58,7 +55,7 @@ export const UploadPost: NextPage<IUploadPostProps> = ({ open, setOpen }) => {
 
     reader.onload = renderEvent => {
       setSelectedFile(renderEvent?.target?.result as string);
-    }; //console.log("selectedFile", selectedFile);
+    };
   };
 
   return (
