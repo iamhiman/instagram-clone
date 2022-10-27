@@ -1,25 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  QueryDocumentSnapshot,
+  DocumentData,
+} from "@firebase/firestore";
 import type { NextPage } from "next";
+import { db } from "../firebase";
 import { Post } from "./Post";
-import post from "../assets/post.jpeg";
 
 export const Posts: NextPage = () => {
-  const posts = [
-    {
-      id: "1",
-      username: "himanshukashyap",
-      profileImg: post?.src,
-      image: post?.src,
-      caption: "abcd",
-    },
-    {
-      id: "2",
-      username: "kashyaphimanshu",
-      profileImg: post?.src,
-      image: post?.src,
-      caption: "pqrs",
-    },
-  ];
+  const [posts, setPosts] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
+
+  useEffect(
+    () =>
+      onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), snapshot => {
+        setPosts(snapshot.docs);
+      }),
+    []
+  );
 
   return (
     <div>
@@ -27,10 +28,10 @@ export const Posts: NextPage = () => {
         <Post
           key={post.id}
           id={post.id}
-          username={post.username}
-          userImg={post.profileImg}
-          img={post.image}
-          caption={post.caption}
+          username={post.data().username}
+          userImg={post.data().profileImg}
+          img={post.data().image}
+          caption={post.data().caption}
         />
       ))}
     </div>
