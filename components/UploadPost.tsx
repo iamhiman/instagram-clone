@@ -93,7 +93,7 @@ export const UploadPost: NextPage<IUploadPostProps> = ({ open, setOpen }) => {
 
           <div className="mt-2">
             <input
-              className="w-full border-none text-center focus:ring-0"
+              className="w-full border-none text-center focus:ring-0 outline-none"
               ref={captionRef}
               type="text"
               placeholder="Please enter a caption..."

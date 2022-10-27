@@ -35,3 +35,11 @@ body {
 .ant-modal-content {
   border-radius: 0.5rem !important;
 }
+
+.hideScroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hideScroll::-webkit-scrollbar {
+  display: none;
+}
