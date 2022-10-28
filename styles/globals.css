@@ -40,6 +40,18 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .hideScroll::-webkit-scrollbar {
   display: none;
+}
+
+.ant-modal-close {
+  top: -10px !important;
+  right: 10px !important;
+}
+
+.ant-modal-close-x {
+  width: 15px !important;
+  height: 45px !important;
+  font-size: 20px !important;
 }
