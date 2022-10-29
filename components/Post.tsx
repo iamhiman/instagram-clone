@@ -27,6 +27,7 @@ import { Button, Form, Input, Row, Col } from "antd";
 import { useMediaQuery } from "react-responsive";
 import Moment from "react-moment";
 import { db } from "../firebase";
+import { LikedUsers } from "./LikedUsers";
 
 interface IPostProps {
   id: string;
@@ -44,7 +45,8 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
   const { data: session } = useSession();
   const [comments, setComments] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
   const [likes, setLikes] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
-  const [hasLiked, setHasLiked] = useState<any>(false);
+  const [hasLiked, setHasLiked] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const isMobile500 = useMediaQuery({ query: "(max-width: 500px)" });
   const [form] = Form.useForm<IFormValue>();
 
@@ -73,7 +75,7 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
     } else {
       await setDoc(doc(db, "posts", id, "likes", session?.user?.uid!), {
         username: session?.user?.username,
-        userImg: userImg,
+        userImg: session?.user?.image,
         name: session?.user?.name,
       });
     }
@@ -89,6 +91,14 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
       userImage: session?.user?.image,
       timestamp: serverTimestamp(),
     });
+  };
+
+  const getLikedUsers = () => {
+    setOpen(true);
+    // onSnapshot(collection(db, "posts", id, "likes"), snapshot => {
+    //   snapshot.docs.map(d => console.log(d.data()));
+    // });
+    // console.log(likes);
   };
 
   return (
@@ -124,7 +134,13 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
       )}
 
       <div className="truncate p-5 pt-3 pb-0">
-        {likes.length > 0 && <p className="mb-1 font-bold">{likes.length} likes</p>}
+        {likes.length > 0 && (
+          <p className="mb-1 font-bold" onClick={() => getLikedUsers()}>
+            {likes.length} likes
+          </p>
+        )}
+
+        {open && <LikedUsers open={open} setOpen={setOpen} id={id} />}
 
         <p className="">
           <span className="mr-1 font-bold">{username}</span>

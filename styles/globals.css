@@ -32,6 +32,10 @@ body {
   content: "" !important;
 }
 
+.ant-modal-header {
+  border-radius: 0.5rem !important;
+}
+
 .ant-modal-content {
   border-radius: 0.5rem !important;
 }
