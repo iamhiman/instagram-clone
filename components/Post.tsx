@@ -147,7 +147,7 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
       </div>
 
       {comments.length > 0 && (
-        <div className="ml-5 mt-5 max-h-40 overflow-y-scroll hideScroll">
+        <div className={`ml-5 max-h-40 overflow-y-scroll hideScroll ${session ? "mt-5" : "mt-0"}`}>
           {comments?.map(comment => (
             <div key={comment.id} className="mb-3 flex">
               <img
