@@ -93,14 +93,6 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
     });
   };
 
-  const getLikedUsers = () => {
-    setOpen(true);
-    // onSnapshot(collection(db, "posts", id, "likes"), snapshot => {
-    //   snapshot.docs.map(d => console.log(d.data()));
-    // });
-    // console.log(likes);
-  };
-
   return (
     <div className="my-7 rounded-lg border border-gray-200 bg-white">
       <div className="flex items-center p-5">
@@ -135,7 +127,7 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
 
       <div className="truncate p-5 pt-3 pb-0">
         {likes.length > 0 && (
-          <p className="mb-1 font-bold" onClick={() => getLikedUsers()}>
+          <p className="mb-1 font-bold" onClick={() => session && setOpen(true)}>
             {likes.length} likes
           </p>
         )}
