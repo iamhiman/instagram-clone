@@ -13,6 +13,7 @@ import {
   setDoc,
   QueryDocumentSnapshot,
   DocumentData,
+  Timestamp,
 } from "firebase/firestore";
 import {
   BookmarkIcon,
@@ -35,13 +36,14 @@ interface IPostProps {
   userImg: string;
   img: string;
   caption: string;
+  timestamp: Timestamp;
 }
 
 interface IFormValue {
   comment: string;
 }
 
-export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption }) => {
+export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption, timestamp }) => {
   const { data: session } = useSession();
   const [comments, setComments] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
   const [likes, setLikes] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
@@ -53,7 +55,7 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
   useEffect(
     () =>
       onSnapshot(
-        query(collection(db, "posts", id, "comments"), orderBy("timestamp", "desc")),
+        query(collection(db, "posts", id, "comments"), orderBy("timestamp", "asc")),
         snapshot => setComments(snapshot.docs)
       ),
     [id]
@@ -125,7 +127,7 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
         </div>
       )}
 
-      <div className="truncate p-5 pt-3 pb-0">
+      <div className={`truncate p-5 pt-3  ${session ? "pb-0" : "pb-5"}`}>
         {likes.length > 0 && (
           <p className="mb-1 font-bold" onClick={() => session && setOpen(true)}>
             {likes.length} likes
@@ -134,14 +136,18 @@ export const Post: NextPage<IPostProps> = ({ id, username, userImg, img, caption
 
         {open && <LikedUsers open={open} setOpen={setOpen} id={id} />}
 
-        <p className="">
+        <p className="mb-1">
           <span className="mr-1 font-bold">{username}</span>
           <span>{caption}</span>
         </p>
+
+        <Moment fromNow className="text-xs">
+          {timestamp?.toDate()}
+        </Moment>
       </div>
 
       {comments.length > 0 && (
-        <div className="ml-5 max-h-40 overflow-y-scroll hideScroll">
+        <div className="ml-5 mt-5 max-h-40 overflow-y-scroll hideScroll">
           {comments?.map(comment => (
             <div key={comment.id} className="mb-3 flex">
               <img
